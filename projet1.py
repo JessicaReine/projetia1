@@ -6,37 +6,36 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error
 
-# Titre de l'application
+
 st.title("Analyse des Données Beans & Pods")
 
-# Chargement des données
- # Utilisation de st.cache_data au lieu de st.cache
+
 def load_data():
-    data = pd.read_csv('BeansDataSet.csv')  # Remplacez par le nom de votre fichier
+    data = pd.read_csv('BeansDataSet.csv')  
     return data
 
 data = load_data()
 
-# Afficher les colonnes disponibles pour vérification
+
 st.write("Colonnes disponibles :", data.columns)
 
-# Colonnes disponibles pour le calcul des ventes totales
+
 columns_for_total_sales = ['Robusta', 'Arabica', 'Espresso', 'Lungo', 'Cappuccino']
 
-# Vérifier si les colonnes existent dans le fichier CSV
+
 missing_columns = [col for col in columns_for_total_sales if col not in data.columns]
 if missing_columns:
     st.warning(f"Les colonnes suivantes sont manquantes : {missing_columns}. Elles seront ignorées dans le calcul des ventes totales.")
     columns_for_total_sales = [col for col in columns_for_total_sales if col in data.columns]
 
-# Calculer les ventes totales
+
 data['TotalSales'] = data[columns_for_total_sales].sum(axis=1)
 
-# Menu de navigation
+
 st.sidebar.title("Navigation")
 menu = st.sidebar.selectbox("Choisissez une section", ["Accueil", "Exploration des Données", "Tendances Clés", "Recommandations", "Données Supplémentaires"])
 
-# Section Accueil
+
 if menu == "Accueil":
     st.header("Bienvenue dans l'analyse des données Beans & Pods")
     st.write("""
@@ -46,23 +45,23 @@ if menu == "Accueil":
     st.write("**Jeu de données :**")
     st.write(data.head())
 
-# Section Exploration des Données
+
 elif menu == "Exploration des Données":
     st.header("Exploration des Données")
     
-    # Affichage des données brutes
+   
     if st.checkbox("Afficher les données brutes"):
         st.write(data)
     
-    # Statistiques descriptives
+   
     st.subheader("Statistiques Descriptives")
     st.write(data.describe())
 
-# Section Tendances Clés
+
 elif menu == "Tendances Clés":
     st.header("Tendances Clés dans les Données")
     
-    # Tendances par canal
+  
     st.subheader("Ventes par Canal")
     sales_by_channel = data.groupby('Channel')['TotalSales'].sum()
     fig, ax = plt.subplots()
@@ -71,8 +70,7 @@ elif menu == "Tendances Clés":
     st.pyplot(fig)
 
     st.write("""**Observation :** Les ventes en magasin sont plus élevées que les ventes en ligne.""")
-
-    # Tendances par région
+ 
     st.subheader("Ventes par Région")
     sales_by_region = data.groupby('Region')['TotalSales'].sum()
     fig, ax = plt.subplots()
@@ -82,7 +80,7 @@ elif menu == "Tendances Clés":
 
     st.write("""**Observation :** La région Sud génère le plus de ventes, suivie par le Nord et le Centre.""")
 
-    # Tendances par produit
+    
     st.subheader("Ventes par Produit")
     product_sales = data[columns_for_total_sales].sum()
     fig, ax = plt.subplots()
@@ -92,7 +90,7 @@ elif menu == "Tendances Clés":
 
     st.write("""**Observation :** Les produits les plus vendus sont Robusta et le Expresso None.""")
 
-# Section Recommandations
+
 elif menu == "Recommandations":
     st.header("Recommandations pour la Campagne Marketing")
     st.write("""
@@ -105,7 +103,7 @@ elif menu == "Recommandations":
        - Améliorer l'expérience utilisateur sur la plateforme en ligne.
     """)
 
-# Section Données Supplémentaires
+
 elif menu == "Données Supplémentaires":
     st.header("Données Supplémentaires à Collecter")
     st.write("""
@@ -115,7 +113,7 @@ elif menu == "Données Supplémentaires":
     3. **Données sur les préférences des clients** : Préférences en matière de goût, d'emballage, etc.
     """)
 
-# Prédiction avec un modèle d'ensemble (RandomForestRegressor)
+
 st.sidebar.header("conclusion")
 st.sidebar.write("""
 Vous pouvez utiliser un modèle d'ensemble pour prédire les ventes totales en fonction de différentes caractéristiques du jeu de données.
